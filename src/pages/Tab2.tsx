@@ -104,7 +104,6 @@ const Tab2: React.FC = () => {
       let b_amount = basket[commentIndex].Количество
       let sum = b_amount + (amount as number);
       let total = basket[commentIndex].Цена * sum;
-      console.log(sum + " - " + total)
       var updated = update(basket[commentIndex], {Количество: {$set: sum}, Сумма: {$set: total}}); 
 
       Store.dispatch({type: "upd_basket", basket: updated})
@@ -297,14 +296,12 @@ async function  setOrder(){
   let params = {
       Товары: basket
   }
-  console.log(params)
   let res = await getData("СоздатьЧек", params)
   if(res.Код === 100){
     setDocnum(res.Номер)
     setDoc(true);
     Store.dispatch({type: "cl_basket"})
   }
-  console.log(res);
 
 }
 
@@ -357,7 +354,6 @@ async function  setOrder(){
                 text: 'Ok',
                 handler: (data) => {
                   addBasket(1);
-                  console.log(Store.getState().basket)
                 }
               }
           ]} /> 

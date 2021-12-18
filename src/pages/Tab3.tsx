@@ -221,7 +221,6 @@ const Tab3: React.FC = () => {
               {
                 text: 'Ok',
                 handler: (data) => {
-                  console.log(data)
                   let check = true
                   if(data.length === 0) check = false;
                   Store.dispatch({type:"search", Пользователь: check})

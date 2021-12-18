@@ -8,21 +8,22 @@ import { optionsOutline } from 'ionicons/icons';
 
 
 //const Tab1: React.FC = () => {
-    const Login: React.FC = () => {
+  const Login: React.FC = () => {
 
-        const [loading, setLoading]   = useState(false)
-        const [login,   setLogin]   = useState(true)
-        const [e_auth,  setEAuth]   = useState(false) 
-        const [s_auth,  setSAuth]   = useState(false)
-        const [tip, setTip] = useState("")
+        const [loading,   setLoading]   = useState(false)
+        const [login,     setLogin]     = useState(true)
 
-        const [options, setOptions] = useState(false)
-        const [serv, setServ] = useState("")
-        const [port, setPort] = useState("")
+        const [e_auth,    setEAuth]     = useState(false) 
+        const [s_auth,    setSAuth]     = useState(false)
+        const [tip,       setTip]       = useState("")
 
-        const [s_toast, setToast] = useState(false);
+        const [options, setOptions]     = useState(false)
+        const [serv, setServ]           = useState("")
+        const [port, setPort]           = useState("")
 
-        const [message, setMessage] = useState("");
+        const [s_toast, setToast]       = useState(false);
+
+        const [message, setMessage]     = useState("");
 
         let history = useHistory();
 
@@ -41,19 +42,22 @@ import { optionsOutline } from 'ionicons/icons';
           .then((getData) => {
             setTip(getData.Тип);
             Store.dispatch({
-                type: "us", 
-                auth: true, 
-                user: data.Логин, 
-                password: data.Пароль,
-                role: getData.Тип
+                type:       "us", 
+                auth:       true, 
+                user:       data.Логин, 
+                password:   data.Пароль,
+                role:       getData.Тип
             })
+            console.log(data)
             localStorage.setItem("Stok_data_login", data.Логин)
             setLoading(false)
             setSAuth(true)
           }).catch(error => {
             setLoading(false)
-            setMessage(SERV());
+            setMessage(error.toString());
+            console.log(error);
             setToast(true)
+            setLogin(true)
           })
         
     }
@@ -191,7 +195,7 @@ import { optionsOutline } from 'ionicons/icons';
             isOpen={s_toast}
             onDidDismiss={() => setToast(false)}
             message = { message}
-            duration={1500}
+            duration={3500}
           />
           </IonPage>
       

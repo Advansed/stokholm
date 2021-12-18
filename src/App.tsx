@@ -35,7 +35,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { Store } from './pages/Store';
+import { getStores, Store } from './pages/Store';
 
 const App: React.FC = () =>  {
 
@@ -48,6 +48,9 @@ const App: React.FC = () =>  {
 
    Store.subscribe_auth(()=>{
      let user = Store.getState().user;
+    console.log("auth - 1")
+
+        getStores()
 
      setCl1(""); setCl3("");
      setCl2(""); setCl4("");

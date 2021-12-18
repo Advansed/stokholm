@@ -9,7 +9,7 @@ function i_data(){
 
 export async function getData(url, params){
     let user = Store.getState().user
-
+    console.log(user)
    let res = await axios.post(
         SERV() + url
         ,params
@@ -32,6 +32,7 @@ export async function getData(url, params){
 
 export async function getGoods(params){
     let user = Store.getState().user
+    console.log(user)
 
    let res = await axios.post(
         SERV() + "Остатки"
@@ -56,6 +57,7 @@ export async function getGoods(params){
 
 export async function getDocs(params){
     let user = Store.getState().user
+    console.log(user)
 
     let res = await axios.get(
         SERV() + "История"
@@ -81,6 +83,7 @@ export async function getDocs(params){
 
 export async function getDist(params){
     let user = Store.getState().user
+    console.log(user)
 
     let res = await axios.get(
         SERV() + "Доставки"
@@ -106,6 +109,7 @@ export async function getDist(params){
 
 export async function getStores(){
     let user = Store.getState().user
+    console.log(user)
     let res = false
     res = await axios.get(
         SERV() + "Склады"
@@ -231,9 +235,9 @@ interface s_type{
 const i_state: s_type | any = {
     user:{
         auth: true,
-        user: "Администратор",
-        password: "123456",
-        role: "Полный"
+        user: "",
+        password: "",
+        role: ""
 
     },
 
@@ -260,14 +264,16 @@ function    usReducer(state= i_state.user, action){
     switch(action.type){
         case "us": {
             return {
-                auth: action.auth === undefined ? state.auth : action.auth,
-                user: action.user === undefined ? state.user : action.user,
-                password: action.password === undefined ? state.password : action.password,
-                role: action.role === undefined ? state.role : action.role
+                auth:       action.auth     === undefined ? state.auth      : action.auth,
+                user:       action.user     === undefined ? state.user      : action.user,
+                password:   action.password === undefined ? state.password  : action.password,
+                role:       action.role     === undefined ? state.role      : action.role
             }
         }
         default: return state;
     }
+
+    console.log(state)
 }
 
 function    gdReducer(state = i_state.goods, action){
@@ -417,7 +423,7 @@ function create_Store(reducer, initialState) {
             currentState = currentReducer(currentState, action);
             switch(action.type){
                 case "list_sto" : store_list();break
-                case "us": auth_list();break
+                case "us": {auth_list();}break
             }
             if(action.type.indexOf("basket") > -1) l_basket();
             return action;
@@ -427,11 +433,23 @@ function create_Store(reducer, initialState) {
         },
         subscribe_auth(newListener) {
             auth_list = newListener;
-        },        
+        },              
         subscribe_basket(newListener) {
             l_basket = newListener;
         }
     };
+}
+
+export async function get_Store(){
+
+    let res = await getStores()
+    if(res){
+        Store.dispatch({type: "list_sto"});
+         getGoods(Store.getState().param1)
+         getDocs({params:{}})
+         getDist({params:{}})
+    }
+
 }
 
 export function SERV(){
@@ -439,10 +457,11 @@ export function SERV(){
     let ip =  localStorage.getItem("StokHolm_SERV");                
     let port = localStorage.getItem("StokHolm_PORT");
 
-    console.log(ip + ":" + port)
+    if(ip === null || ip === undefined) ip = ""
+    if(port === null || port === undefined) port = ""
 
-    if( ip  === undefined || ((ip as string).length < 13))       ip = "91.185.236.216"
-    if( port === undefined || ((port as string).length  < 5))   port = "29080"
+    if((ip as string).length < 13)     ip = "91.185.236.216"
+    if((port as string).length  < 5)   port = "29080"
 
     let url = " http://" + ip + ":" + port + "/trade/hs/API/V1/"
 
@@ -450,18 +469,13 @@ export function SERV(){
 
 }
 
+
 export const Store = create_Store(rootReducer, i_state)
-//export const Store = createStore(rootReducer, i_state)
+
 
 export async function getDatas(){
 
-        let res = await getStores()
-        if(res){
-            Store.dispatch({type: "list_sto"});
-             getGoods(Store.getState().param1)
-             getDocs({params:{}})
-             getDist({params:{}})
-        }
 }
 
 getDatas()
+

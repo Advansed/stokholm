@@ -51,21 +51,20 @@ const LineChart: React.FC<ContainerProps> = ({ period, upd }) => {
           }
       }
 
-      console.log(params)
-      let state = Store.getState().user
+      let user = Store.getState().user;
 
       axios.get(
+
         SERV() + "График_"
         ,{
           auth: {
-            username: unescape(encodeURIComponent(state.user)),
-            password: unescape(encodeURIComponent(state.password))
+            username: unescape(encodeURIComponent(user.user)),
+            password: unescape(encodeURIComponent(user.password))
           },
           params
         } 
       ).then(response => response.data)
       .then((data) => {
-        console.log(data)
           if(data.Code !== 200){
 
           let n = 0
@@ -79,7 +78,6 @@ const LineChart: React.FC<ContainerProps> = ({ period, upd }) => {
         } //else console.log(data)
       
       }).catch(error => {
-        console.log(error)
         return {}
       })
 
